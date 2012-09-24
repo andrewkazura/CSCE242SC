@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<header>
+</header>
+
+  <body>
+  {% extends "base.html" %}
+  {% block title %}{{ title }}{% endblock %}
+  {% block header %}{{ header }}{% endblock %}
+  {% block content %}
+    <h1>{{ title }}</h1>
+   
+   <div class="displaybox2">
+   <p>   {{ imgURL }}</p>
+   <p>   {{ caption }}</p>
+   <p>Taken on {{ date }}</p>
+   
+   </div>
+   
+   
+    <div class="displaybox">
+    {% if username %}
+ 
+
+	  <form action="/pin/{{ id }}" method="post">
+	  <label for="imgURL">Image URL:</label> <input type="text" name="imgURL"/><br/>
+	  <label for="caption">Caption:</label> <input type="text" name="caption"/><br/>
+	  <input type="submit" value="Update Pin info"/>
+	  </form>
+	
+	
+	  <form action="/hell/{{ id }}" method="post">
+	  <input type="submit" value="Delete this Pin"/>
+      </form>
+
+    {% else %}
+      <p>You must login first.</p>    
+    {% endif %}
+    </div>
+  {% endblock %}
+  </body>
+  
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<header>
+</header>
+
+  <body>
+  {% extends "base.html" %}
+  {% block title %}{{ title }}{% endblock %}
+  {% block header %}{{ header }}{% endblock %}
+  {% block content %}
+    <h1>{{ title }}</h1>
+   
+   {% for pin in pins %}
+   
+    	<div class="displaybox">
+    	{% if username %}
+ 
+   		<p>  {{ pin.imgURL }} Taken on {{ pin.date }}</p>
+   		<p>  {{ pin.caption }}</p>
+
+    
+    	{% else %}
+      		<p>You must login first.</p>    
+    	{% endif %}
+    	</div>
+    {% endfor %}
+  {% endblock %}
+  </body>
+  
+
+</html>

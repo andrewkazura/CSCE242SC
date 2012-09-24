@@ -9,7 +9,7 @@ handlers:
   static_dir: css  
   
 - url: /.*
-  script: Main.app
+  script: pinboard.app
   
   
 libraries:
