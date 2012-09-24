@@ -23,8 +23,9 @@ body {
 
 .right {
     text-align: right;
-    padding: 10px;
+ 	padding: 10px;
 }
+
 
 #header a {
     text-decoration: none;

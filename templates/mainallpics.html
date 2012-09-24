@@ -19,8 +19,7 @@
    
     	<div class="displaybox">
     	{% if username %}
- 
-   		<p>  {{ pin.imgURL }} Taken on {{ pin.date }}</p>
+   		<p>  <a href="/pin/{{pin.key().id()}}"><img src="{{ pin.imgURL }}"/></a> Taken on {{ pin.date }}</p>
    		<p>  {{ pin.caption }}</p>
 
     
