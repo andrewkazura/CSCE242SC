@@ -1,13 +1,5 @@
 Andrew Kazura
 CSCE 242
-Homework 3
+Homework 4
 
-I'm not sure if you said that we needed this so here it is.
-
-The Main page checks to see if the user is logged in and if they are then put their
-userid in the header and a logout button next to it. If there is no user is logged
-in then put a login button in the header.
-
-The master page checks to see if there is data inputted into the Caption and URL 
-variables. If there is something then display it underneath the title otherwise
-display nothing.
+Prompts user for image url and caption. stores that data into a database then sends the user to a new page that displays the image, caption, the owner and what time they put it into the database. the user can also go to a page that has all of their inputs displayed in a column.
