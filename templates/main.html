@@ -18,13 +18,10 @@
     <div class="displaybox">
     {% if username %}
  
-	  Enter new pin:
-	  <form action="/" method="post">
-	  <label for="imgUrl">Image URL:</label> <input type="text" name="imgUrl"/><br/>
-	  <label for="caption">Caption:</label> <input type="text" name="caption"/><br/>
-	  <input type="submit" value="Submit"/>
-	  </form>
-	
+ 	<ul>
+ 	<li><a href="/pin">My Pins</a></li>
+ 	<li><a href="/board">My Boards</a></li>
+ 	</ul>
     
     {% else %}
       <p>You must login first.</p>    

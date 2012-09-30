@@ -7,18 +7,22 @@ Created on Sep 2, 2012
 import webapp2
 import jinja2
 import os
-
-from google.appengine.ext import db
+import logging #for debugging.
 from google.appengine.api import users
+from google.appengine.ext import db
 
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/templates"))
 
-
 class Pin(db.Model):
-    imgURL = db.StringProperty(multiline=True)
+    imgUrl = db.StringProperty()
     caption = db.StringProperty()
     date = db.DateTimeProperty(auto_now_add=True)
-    owner = db.StringProperty()
+    owner = db.UserProperty()
+    tags = db.StringListProperty()
+
+class Board(db.Model):
+    name = db.StringProperty()
+    
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -34,10 +38,7 @@ class MainPage(webapp2.RequestHandler):
             templateValues['username'] = user.nickname()
         else:
             templateValues['login'] = users.create_login_url('/')
-            
-        self.query = Pin.all()
-        for self.pin in self.query:
-            templateValues['id'] = self.pin.key().id()
+
 
            
         template = jinja_environment.get_template('main.html')
@@ -84,7 +85,6 @@ class PinHandler(webapp2.RequestHandler):
         self.response.out.write(template.render(templateValues))
         
  
-
         
     def post(self, id):
         self.key = db.Key.from_path('Pin', long(id))
@@ -102,6 +102,8 @@ class AllPinHandler(webapp2.RequestHandler):
         templateValues = {}
         templateValues['title'] = 'Your Pins'
         templateValues['pins'] = Pin.all()
+        
+#        templateValues['owner'] = 'test'
         user = users.get_current_user()
         if user:
             templateValues['logout'] = users.create_logout_url('/')
@@ -124,7 +126,45 @@ class DeletePin(webapp2.RequestHandler):
         self.pin = db.get(self.key)
         self.pin.delete()
         self.redirect('/')
+        
+        
+class AllBoardHandler(webapp2.RequestHandler):
+    def get(self):
+        templateValues = {}
+        self.user = users.get_current_user()
+        self.templateValues['boards'] = Board.all()
+        self.templateValues['title'] = "All Boards"
+
+           
+        template = jinja_environment.get_template('mainallpics.html')
+        self.response.out.write(template.render(templateValues))
+
+      
 
 
-app = webapp2.WSGIApplication([('/', MainPage),('/pin/(.*)', PinHandler),('/pin', AllPinHandler),('/hell/(.*)',DeletePin),],
+class BoardHandler(webapp2.RequestHandler):
+    def get(self,id):
+        templateValues = {}
+        self.user = users.get_current_user()
+        query = Board.all()
+        self.templateValues['boards'] = query
+        if self.user:
+            self.templateValues['title'] = 'My Boards'
+            self.render('/board')
+        else:
+            self.render('/')
+            
+        template = jinja_environment.get_template('mainpics.html')
+        self.response.out.write(template.render(templateValues))
+
+    
+    def post(self,id):
+        #get the pin
+        
+        pass
+
+
+app = webapp2.WSGIApplication([('/', MainPage),('/pin/(.*)', PinHandler),('/pin', AllPinHandler),
+                               ('/hell/(.*)',DeletePin),('/board/(.*)',BoardHandler),
+                               ('/board', AllBoardHandler),],
                               debug=True)

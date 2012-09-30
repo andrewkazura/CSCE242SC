@@ -14,8 +14,15 @@
   {% block header %}{{ header }}{% endblock %}
   {% block content %}
     <h1>{{ title }}</h1>
-   
+   	  Enter new pin:
+	  <form action="/" method="post">
+	  <label for="imgUrl">Image URL:</label> <input type="text" name="imgUrl"/><br/>
+	  <label for="caption">Caption:</label> <input type="text" name="caption"/><br/>
+	  <input type="submit" value="Submit"/>
+	  </form>
    {% for pin in pins %}
+   
+   
    
     	<div class="displaybox">
     	{% if username %}
