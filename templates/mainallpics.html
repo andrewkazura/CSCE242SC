@@ -14,28 +14,32 @@
   {% block header %}{{ header }}{% endblock %}
   {% block content %}
     <h1>{{ title }}</h1>
+   	<div class="displaybox">
    	  Enter new pin:
 	  <form action="/" method="post">
 	  <label for="imgUrl">Image URL:</label> <input type="text" name="imgUrl"/><br/>
 	  <label for="caption">Caption:</label> <input type="text" name="caption"/><br/>
 	  <input type="submit" value="Submit"/>
 	  </form>
+	  </div>
+	  
    {% for pin in pins %}
-   
-   
-   
-    	<div class="displaybox">
+    	
     	{% if username %}
-   		<p>  <a href="/pin/{{pin.key().id()}}"><img src="{{ pin.imgURL }}"/></a> Taken on {{ pin.date }}</p>
-   		<p>  {{ pin.caption }}</p>
-
-    
+    		{% if pin.pinprivate != "on" %}
+   			<div class="displaybox">
+   			<p>  <a href="/pin/{{pin.key().id()}}"><img src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</p>
+   			<p>  {{ pin.caption }}</p>
+   			{% elif username == pin.owner %}
+   			<p>  <a href="/pin/{{pin.key().id()}}"><img src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</p>
+   			<p>  {{ pin.caption }}</p>
+    		{% endif %}
     	{% else %}
       		<p>You must login first.</p>    
     	{% endif %}
     	</div>
     {% endfor %}
-  {% endblock %}
+	{% endblock %}
   </body>
   
 

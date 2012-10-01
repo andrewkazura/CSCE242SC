@@ -15,7 +15,7 @@
 	<div class="right">
 	<b><a href="/">Home</a></b>
 	{% if username %}
-	<b><a href="/pin">My Pins</a> - {{ username }}</b> - <a href="{{ logout }}">Logout</a>
+	<b><a href="/board">My Boards</a></b> - <b><a href="/pin">My Pins</a> - {{ username }}</b> - <a href="{{ logout }}">Logout</a>
 	{% else %}
 	<a href="{{ login }}">Login</a>
 	{% endif %}

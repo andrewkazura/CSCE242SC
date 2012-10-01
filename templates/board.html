@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<header>
+</header>
+<body>
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}{{ header }}{% endblock %}
+{% block content %}
+    <h1>{{ title }}</h1>
+	</br>
+
+
+      {% for tag in tags %}
+     	{% for pin in pins %}
+     		{% if "" ~ pin.key().id() in tag %}
+   		    <div class="displaybox">
+   		    <a href="/pin/{{pin.key().id()}}"><img src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</br>
+   			{{ pin.caption }}</br>
+   			</div>
+     		{% endif %}
+     	{% endfor %}
+     {% endfor %}
+     </br>
+     
+     <div class="displaybox">
+     Edit this board:
+     <form action="/board/{{ id }}" method="post">
+	 <label for="name">Title: </label> <input type="text" name="name"/><br/>
+     <label for="boardprivate">Private </label> <input type= "checkbox" name = "boardprivate">
+     </br>
+     Add Pin: <select name="addpin">
+     		  <option value = "">--</option>
+
+     			 {% for pin in pins %}
+     				{% if "" ~ pin.key().id() not in tags %}
+     					<option value = {{ pin.key().id() }}>{{ pin.caption }}</option>
+     				{% endif %}
+     			{% endfor %}
+     		  </select>
+     </br>		  
+     Delete Pin: <select name="deletepin">
+     			<option value = "">--</option>
+     			
+			      {% for tag in tags %}
+     				{% for pin in pins %}
+     					{% if "" ~ pin.key().id() in tag %}
+     					<option value = {{ pin.key().id() }}>{{ pin.caption }}</option>
+     				{% endif %}
+     				{% endfor %}	
+     			{% endfor %}
+     			</select>
+	  <input type="submit" value="Update This Board"/>
+	  </form>
+     
+     <form action="/hell2/{{ id }}" method="post">
+	 <input type="submit" value="Delete this Board"/>
+     </form>
+     </div>
+     
+     
+
+{% endblock %}
+</body>
+</html>
