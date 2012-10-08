@@ -19,7 +19,7 @@
      	{% for pin in pins %}
      		{% if "" ~ pin.key().id() in tag %}
    		    <div class="displaybox">
-   		    <a href="/pin/{{pin.key().id()}}"><img src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</br>
+   		    <a href="/pin/{{pin.key().id()}}"><img class="imgpx" src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</br>
    			{{ pin.caption }}</br>
    			</div>
      		{% endif %}
@@ -33,9 +33,10 @@
 	 <label for="name">Title: </label> <input type="text" name="name"/><br/>
      <label for="boardprivate">Private </label> <input type= "checkbox" name = "boardprivate">
      </br>
+     
+     
      Add Pin: <select name="addpin">
      		  <option value = "">--</option>
-
      			 {% for pin in pins %}
      				{% if "" ~ pin.key().id() not in tags %}
      					<option value = {{ pin.key().id() }}>{{ pin.caption }}</option>
@@ -43,9 +44,10 @@
      			{% endfor %}
      		  </select>
      </br>		  
+     
+     
      Delete Pin: <select name="deletepin">
      			<option value = "">--</option>
-     			
 			      {% for tag in tags %}
      				{% for pin in pins %}
      					{% if "" ~ pin.key().id() in tag %}

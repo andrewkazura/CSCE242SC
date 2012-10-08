@@ -28,10 +28,10 @@
     	{% if username %}
     		{% if pin.pinprivate != "on" %}
    			<div class="displaybox">
-   			<p>  <a href="/pin/{{pin.key().id()}}"><img src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</p>
+   			<p>  <a href="/pin/{{pin.key().id()}}"><img class="imgpx" src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</p>
    			<p>  {{ pin.caption }}</p>
    			{% elif username == pin.owner %}
-   			<p>  <a href="/pin/{{pin.key().id()}}"><img src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</p>
+   			<p>  <a href="/pin/{{pin.key().id()}}"><img class="imgpx" src="{{ pin.imgUrl }}"/></a></br> Taken on {{ pin.date }}</p>
    			<p>  {{ pin.caption }}</p>
     		{% endif %}
     	{% else %}
