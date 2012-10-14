@@ -17,24 +17,18 @@
    
    <div class="displaybox2">
    <p>   <img class="imgpx" src="{{ imgUrl }}"/></p>
-   <p>   {{ caption }}</p>
+   <p id="captionline">  {{ caption }} </p>
+   <p id="holder"> </p>
+   <label for="pinprivate">Private </label> <input type= "checkbox" name = "pinprivate"{% if pinprivate %}checked {% endif %}  id = "pinprivate">
    <p>Taken on {{ date }}</p>
-   
    </div>
+   
+   <p id="id" hidden>{{ id }}</p>
+   <p id="pinprivateval" hidden>{{ pinprivate }}</p>
    
    
     <div class="displaybox">
     {% if username %}
- 
-
-	  <form action="/pin/{{ id }}" method="post">
-	  <label for="imgUrl">Image URL:</label> <input type="text" name="imgUrl"/><br/>
-	  <label for="caption">Caption:</label> <input type="text" name="caption"/><br/>
-	  <label for="pinprivate">Private </label> <input type= "checkbox" name = "pinprivate">
-	  </br>
-	  <input type="submit" value="Update Pin info"/>
-	  </form>
-
 
 	  <form action="/hell/{{ id }}" method="post">
 	  <input type="submit" value="Delete this Pin"/>

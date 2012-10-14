@@ -5,12 +5,15 @@ function getImages(){
 	var img;
 	images = document.getElementsByTagName('img');
 	
-	for(var i=0, a=0; i<images.length; i++){
+	for(var i=0; i<images.length; i++){
 		img = images[i];
 		if(img.getAttribute('src').indexOf("http") != -1)
 		{
-			links[a] = img.getAttribute('src');
-			a++;
+			links[i] = img.getAttribute('src');
+		}
+		else
+		{
+			links[i] = "http://" + location.host + img.getAttribute('src');
 		}
 		
 	}

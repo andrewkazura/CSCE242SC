@@ -99,8 +99,6 @@ class PinHandler(webapp2.RequestHandler):
     def post(self, id):
         self.key = db.Key.from_path('Pin', long(id))
         self.pin = db.get(self.key)
-        if self.request.get('imgUrl') != "":
-            self.pin.imgUrl=self.request.get('imgUrl')
         if self.request.get('caption') != "":
             self.pin.caption=self.request.get('caption')
         self.pin.pinprivate = self.request.get('pinprivate')
