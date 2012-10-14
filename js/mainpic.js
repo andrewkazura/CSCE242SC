@@ -7,9 +7,7 @@ function handleClick(e){
 	holder.appendChild(cap)
 	
 	$(document).keypress(function(e2){
-		if(e2.which == 13) {
-			console.log('you press enter')
-		
+		if(e2.which == 13) {		
 			var caption = cap.value;
 			var idvalue = id.innerText;
 			var direction = '/pin/' + idvalue;
