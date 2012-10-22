@@ -5,6 +5,7 @@ function handleClick(e){
 	cap.type = 'text'
 	captionline.innerText = ""
 	holder.appendChild(cap)
+	$(cap).focus();
 	
 	$(document).keypress(function(e2){
 		if(e2.which == 13) {		
@@ -13,6 +14,7 @@ function handleClick(e){
 			var direction = '/pin/' + idvalue;
 			captionline.innerText = caption;
 			holder.removeChild(cap);
+			$(holder).focus();
 			
 			$.ajax(direction, {
 				type: 'POST',

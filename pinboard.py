@@ -8,6 +8,7 @@ import webapp2
 import jinja2
 import os
 import logging #for debugging.
+import json
 from google.appengine.api import users
 from google.appengine.ext import db
 
@@ -103,7 +104,7 @@ class PinHandler(webapp2.RequestHandler):
             self.pin.caption=self.request.get('caption')
         self.pin.pinprivate = self.request.get('pinprivate')
         self.pin.save()
-        self.redirect('/pin/'+ str(self.pin.key().id())) 
+       
 
 
             
@@ -121,7 +122,20 @@ class AllPinHandler(webapp2.RequestHandler):
         else:
             templateValues['login'] = users.create_login_url('/')
             
-
+                            
+        if self.request.get('fmt') == 'json':
+            data = {}
+            for pin in Pin.all():
+                data[pin.key().id()] = pin.imgUrl
+            self.response.out.headers['Content-Type'] = 'text/json'
+            self.response.out.write(json.dumps(data))
+            self.response.out.headers['Content-Type'] = 'text/html'          
+            template = jinja_environment.get_template('mainjsonallpics.html')
+            self.response.out.write(template.render(templateValues))  
+            return
+            
+        template = jinja_environment.get_template('mainjsonallpics.html')
+        self.response.out.write(template.render(templateValues))  
            
         template = jinja_environment.get_template('mainallpics.html')
         self.response.out.write(template.render(templateValues))
