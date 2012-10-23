@@ -13,8 +13,13 @@
 {% block content %}
     <h1>{{ title }}</h1>
 	</br>
-
-
+     <div id = "mainholder">
+     </div>
+	  <p id = boardId hidden>{{ id }}</p>
+	  
+	  
+	  
+<!--  	  
       {% for tag in tags %}
      	{% for pin in pins %}
      		{% if "" ~ pin.key().id() in tag %}
@@ -45,7 +50,7 @@
      		  </select>
      </br>		  
      
-     
+
      Delete Pin: <select name="deletepin">
      			<option value = "">--</option>
 			      {% for tag in tags %}
@@ -58,12 +63,16 @@
      			</select>
 	  <input type="submit" value="Update This Board"/>
 	  </form>
-     
+	     -->
+<div class="displaybox">     
      <form action="/hell2/{{ id }}" method="post">
 	 <input type="submit" value="Delete this Board"/>
      </form>
      </div>
      
+     
+     <div class="displaybox" id = "offholder">
+     </div>
      
 
 {% endblock %}

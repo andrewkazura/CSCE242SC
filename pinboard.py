@@ -91,6 +91,16 @@ class PinHandler(webapp2.RequestHandler):
             templateValues['login'] = users.create_login_url('/')
             
         templateValues['boards'] = Board.all()
+        
+        if self.request.get('fmt') == 'json':
+            self.response.out.headers['Content-Type'] = 'text/json'
+            data = {'key': self.pin.key().id(), 'imgUrl': self.pin.imgUrl, 'caption': self.pin.caption}
+            self.response.out.write(json.dumps(data))
+            return
+          
+            template = jinja_environment.get_template('jsonmainpics.html')
+            self.response.out.write(template.render(templateValues))  
+            return        
        
         template = jinja_environment.get_template('mainpics.html')
         self.response.out.write(template.render(templateValues))
@@ -122,22 +132,23 @@ class AllPinHandler(webapp2.RequestHandler):
         else:
             templateValues['login'] = users.create_login_url('/')
             
-                            
+        template = jinja_environment.get_template('mainallpics.html')                         
+        
         if self.request.get('fmt') == 'json':
-            data = {}
-            for pin in Pin.all():
-                data[pin.key().id()] = pin.imgUrl
             self.response.out.headers['Content-Type'] = 'text/json'
-            self.response.out.write(json.dumps(data))
-            self.response.out.headers['Content-Type'] = 'text/html'          
-            template = jinja_environment.get_template('mainjsonallpics.html')
-            self.response.out.write(template.render(templateValues))  
-            return
+            jdata = []
+            for pin in Pin.all():
+                data = {'key': pin.key().id(), 'imgUrl': pin.imgUrl, 'caption': pin.caption}
+                jdata.append(data)
+            self.response.out.write(json.dumps(jdata))
             
-        template = jinja_environment.get_template('mainjsonallpics.html')
-        self.response.out.write(template.render(templateValues))  
+            return
+            template = jinja_environment.get_template('mainjsonallpics.html')
+            self.response.out.write(template.render(templateValues))
+            return
+ 
            
-        template = jinja_environment.get_template('mainallpics.html')
+ 
         self.response.out.write(template.render(templateValues))
 
 
@@ -199,9 +210,20 @@ class BoardHandler(webapp2.RequestHandler):
         self.templateValues['id'] = self.board.key().id()
         self.templateValues['tags'] = self.board.tags
         
+        if self.request.get('fmt') == 'json':
+            data = {}
+            data['pinboard'] = self.templateValues['tags']
+            for pin in Pin.all():
+                data[pin.key().id()] = (pin.imgUrl, pin.caption, pin.key().id())
+            data['boardID'] = self.board.key().id()
+            self.response.out.headers['Content-Type']='text/json'
+            self.response.out.write(json.dumps(data))
+            return
             
         template = jinja_environment.get_template('board.html')
-        self.response.out.write(template.render(self.templateValues))
+        
+        if self.request.get('fmt') != 'json':
+            self.response.out.write(template.render(self.templateValues))
 
     
     def post(self,id):
