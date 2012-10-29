@@ -210,12 +210,15 @@ class BoardHandler(webapp2.RequestHandler):
         self.templateValues['id'] = self.board.key().id()
         self.templateValues['tags'] = self.board.tags
         
+        
         if self.request.get('fmt') == 'json':
             data = {}
             data['pinboard'] = self.templateValues['tags']
             for pin in Pin.all():
                 data[pin.key().id()] = (pin.imgUrl, pin.caption, pin.key().id())
             data['boardID'] = self.board.key().id()
+            data['boardprivate'] = self.board.boardprivate
+            
             self.response.out.headers['Content-Type']='text/json'
             self.response.out.write(json.dumps(data))
             return
@@ -240,7 +243,7 @@ class BoardHandler(webapp2.RequestHandler):
             self.board.tags.remove(str(self.request.get('deletepin')))
         
         self.board.save()
-        self.redirect('/board/' + str(self.board.key().id()))
+#        self.redirect('/board/' + str(self.board.key().id()))
         
         
 
