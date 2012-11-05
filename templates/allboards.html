@@ -24,11 +24,11 @@
     {% for board in boards %}
     	{% if board.boardprivate != "on" %}
     	<ul>
-    	<li> <a href="/board/{{ board.key().id() }}">{{ board.name }}</a></li>
+    	<li> <a href="/board/{{ board.key().id() }}">{{ board.name }}</a> (<a href="/canvas/{{ board.key().id() }}">canvas</a>)</li>
     	</ul>
     	{% elif board.owner == username %}
     	<ul>
-    	<li> <a href="/board/{{ board.key().id() }}">{{ board.name }}</a></li>
+    	<li> <a href="/board/{{ board.key().id() }}">{{ board.name }}</a> (<a href="/canvas/{{ board.key().id() }}">canvas</a>)</li>
     	</ul>
     	{% endif %}
     {% endfor %}

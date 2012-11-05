@@ -26,6 +26,8 @@ class Board(db.Model):
     owner = db.UserProperty()
     boardprivate = db.StringProperty()
     tags = db.StringListProperty()
+    xCoor = db.StringProperty()
+    yCoor = db.StringProperty()
     
 
 
@@ -243,12 +245,61 @@ class BoardHandler(webapp2.RequestHandler):
             self.board.tags.remove(str(self.request.get('deletepin')))
         
         self.board.save()
-#        self.redirect('/board/' + str(self.board.key().id()))
-        
-        
 
+        
+        
+class CanvasHandler(webapp2.RequestHandler):
+    def get(self,id):
+        self.templateValues = {}
+        self.user = users.get_current_user()
+        
+        self.templateValues['pins'] = Pin.all()
+        
+        self.key = db.Key.from_path('Board', long(id))
+        self.board = db.get(self.key)
+        
+        self.templateValues['title'] = self.board.name
+        self.templateValues['owner'] = self.board.owner
+        self.templateValues['boardprivate'] = self.board.boardprivate
+        self.templateValues['id'] = self.board.key().id()
+        self.templateValues['tags'] = self.board.tags
+        self.templateValues['xCoor'] = self.board.xCoor
+        self.templateValues['yCoor'] = self.board.yCoor
+        
+        
+        
+        if self.request.get('fmt') == 'json':
+            data = {}
+            data['pinboard'] = self.templateValues['tags']
+            for pin in Pin.all():
+                data[pin.key().id()] = (pin.imgUrl, pin.caption, pin.key().id(), self.templateValues['xCoor'], self.templateValues['yCoor'])
+            data['boardID'] = self.board.key().id()
+            data['boardprivate'] = self.board.boardprivate
+            
+            self.response.out.headers['Content-Type']='text/json'
+            self.response.out.write(json.dumps(data))
+            return
+            
+        template = jinja_environment.get_template('canvas.html')
+        
+        if self.request.get('fmt') != 'json':
+            self.response.out.write(template.render(self.templateValues))
+
+    
+    def post(self,id):
+        self.key = db.Key.from_path('Board', long(id))
+        self.board = db.get(self.key)
+        if self.request.get('name') != "":
+            self.board.name = self.request.get('name')
+        self.board.boardprivate = self.request.get('boardprivate')
+        self.board.xCoor = self.request.get('xCoor')
+        self.board.yCoor = self.request.get('yCoor') 
+
+        
+        self.board.save()
 
 app = webapp2.WSGIApplication([('/', MainPage),('/pin/(.*)', PinHandler),('/pin', AllPinHandler),
                                ('/hell/(.*)',DeletePin),('/board/(.*)',BoardHandler),
-                               ('/board', AllBoardHandler),('/hell2/(.*)',DeleteBoard)],
+                               ('/board', AllBoardHandler),('/hell2/(.*)',DeleteBoard),
+                               ('/canvas/(.*)', CanvasHandler)],
                               debug=True)
