@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<header>
+</header>
+<body>
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}{{ header }}{% endblock %}
+{% block content %}
+	  <p id = boardId hidden>{{ id }}</p>
+	  <p id = ownerName hidden>{{ owner }} </p>
+
+<canvas id="board" width="856" height = "482" style="border: solid 1px"></canvas>
+
+</br>
+</br>
+<script type="text/javascript" src="/js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/js/canscript.js"></script>
+{% endblock %}
+</body>
+</html>

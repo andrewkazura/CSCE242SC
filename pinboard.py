@@ -11,6 +11,9 @@ import logging #for debugging.
 import json
 from google.appengine.api import users
 from google.appengine.ext import db
+import urllib2
+from google.appengine.api import urlfetch
+from google.appengine.api import images
 
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/templates"))
 
@@ -20,14 +23,18 @@ class Pin(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)
     owner = db.UserProperty()
     pinprivate = db.StringProperty()
+    picture = db.BlobProperty(default=None)
+    width = db.StringProperty()
+    height = db.StringProperty()
+    
 
 class Board(db.Model):
     name = db.StringProperty()
     owner = db.UserProperty()
     boardprivate = db.StringProperty()
     tags = db.StringListProperty()
-    xCoor = db.StringProperty()
-    yCoor = db.StringProperty()
+    xCoor = db.ListProperty(int)
+    yCoor = db.ListProperty(int)
     
 
 
@@ -58,9 +65,16 @@ class MainPage(webapp2.RequestHandler):
     def post(self):
 
         user = users.get_current_user()
+        imgUrl = self.request.get('imgUrl')
+        
         self.pin = Pin(imgUrl=self.request.get('imgUrl'),
                        caption=self.request.get('caption'),
-                       owner=user)
+                       owner=user,
+                       picture = db.Blob(urlfetch.Fetch(imgUrl).content))
+        img = images.Image(self.pin.picture)
+        self.pin.height = str(img.height)
+        self.pin.width = str(img.width)
+        
         self.pin.put()
         
         
@@ -211,6 +225,8 @@ class BoardHandler(webapp2.RequestHandler):
         self.templateValues['boardprivate'] = self.board.boardprivate
         self.templateValues['id'] = self.board.key().id()
         self.templateValues['tags'] = self.board.tags
+        self.templateValues['xCoor'] = self.board.xCoor
+        self.templateValues['yCoor'] = self.board.yCoor
         
         
         if self.request.get('fmt') == 'json':
@@ -272,7 +288,7 @@ class CanvasHandler(webapp2.RequestHandler):
             data = {}
             data['pinboard'] = self.templateValues['tags']
             for pin in Pin.all():
-                data[pin.key().id()] = (pin.imgUrl, pin.caption, pin.key().id(), self.templateValues['xCoor'], self.templateValues['yCoor'])
+                data[pin.key().id()] = (pin.imgUrl, pin.caption, pin.key().id(), 0, 0)
             data['boardID'] = self.board.key().id()
             data['boardprivate'] = self.board.boardprivate
             
@@ -292,14 +308,26 @@ class CanvasHandler(webapp2.RequestHandler):
         if self.request.get('name') != "":
             self.board.name = self.request.get('name')
         self.board.boardprivate = self.request.get('boardprivate')
-        self.board.xCoor = self.request.get('xCoor')
-        self.board.yCoor = self.request.get('yCoor') 
+        x = self.request.get('x')
+        y = self.request.get('y')
+        self.board.xCoor['editPinId'] = int(float(x))
+        self.board.yCoor['editPinId'] = int(y)
 
-        
         self.board.save()
 
-app = webapp2.WSGIApplication([('/', MainPage),('/pin/(.*)', PinHandler),('/pin', AllPinHandler),
+class ImgHandler(webapp2.RequestHandler):
+    def get(self,id):
+        self.templateValues = {}
+        self.user = users.get_current_user()
+        self.key = db.Key.from_path('Pin', long(id))
+        self.pin = db.get(self.key)
+        self.response.headers['Content-Type'] = 'image/jpg'
+        self.response.out.write(self.pin.picture)
+        return
+
+
+app = webapp2.WSGIApplication([('/', MainPage),('/pin/(.*).jpg', ImgHandler),('/pin/(.*)', PinHandler),
                                ('/hell/(.*)',DeletePin),('/board/(.*)',BoardHandler),
                                ('/board', AllBoardHandler),('/hell2/(.*)',DeleteBoard),
-                               ('/canvas/(.*)', CanvasHandler)],
+                               ('/canvas/(.*)', CanvasHandler), ('/pin', AllPinHandler)],
                               debug=True)

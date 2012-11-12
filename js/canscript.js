@@ -70,6 +70,18 @@ function unbind(e){
 	$(document).ready(function(){
 		$('#board').unbind('mousemove');
 		$('#board').live('click', clickHandle);
+		
+		$.ajax('/canvas/' + boardID, {
+			type: "POST",
+			data: {
+				editPinId: jdata[movePin][2],
+				x: jdata[movePin][3],
+				y: jdata[movePin][4],
+			},
+			success: function(data){
+				console.log('update server');
+			}
+		})
 	})
 
 }
