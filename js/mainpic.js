@@ -43,7 +43,33 @@ function otherClick(e){
 		}
 	});	
 	
+}
 
+
+function commentClick(e){
+	cap = document.createElement('input')
+	cap.type = 'text'
+	commentbox.innerText = ""
+	holder2.appendChild(cap)
+	$(cap).focus();
+	
+	$(document).keypress(function(e2){
+		if(e2.which == 13) {		
+			var addcomment = cap.value;
+			var idvalue = id.innerText;
+			var direction = '/pin/' + idvalue;
+			commentbox.innerText = addcomment;
+			holder2.removeChild(cap);
+			$(holder2).focus();
+			
+			$.ajax(direction, {
+				type: 'POST',
+				data: {
+					addcomment: addcomment
+				}
+			});
+		}
+	})	
 	
 }
 
@@ -53,5 +79,6 @@ function otherClick(e){
 $(document).ready(function(){
 	$('#captionline').click(handleClick);
 	$('#pinprivate').click(otherClick);
+	$('#commentbox').click(commentClick);
 	
 })

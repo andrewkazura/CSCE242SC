@@ -42,6 +42,17 @@
 	  	{% endfor %}
 	  
 	  </div>
+	  
+	  <div class="displaybox">
+	  <p id="commentbox">Click here to add a comment</p>
+	  {% for comment in comments %}
+	 	 <p>{{ comment }}</p>
+	  {% endfor %}
+	  
+	  <p id="holder2"></p>
+	  </div>
+	  
+	  
     <div class="displaybox">
     {% else %}
       <p>You must login first.</p>    

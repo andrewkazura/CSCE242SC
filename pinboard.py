@@ -26,6 +26,7 @@ class Pin(db.Model):
     picture = db.BlobProperty(default=None)
     width = db.StringProperty()
     height = db.StringProperty()
+    comments = db.StringListProperty(default=[])
     
 
 class Board(db.Model):
@@ -94,7 +95,8 @@ class PinHandler(webapp2.RequestHandler):
                           'date': self.pin.date,
                           'id': str(self.pin.key().id()),
                           'pinprivate': self.pin.pinprivate,
-                          'delete': True
+                          'delete': True,
+                          'comments': self.pin.comments
                           }
         templateValues['title'] = 'Pin ' + str(self.pin.key().id())
         templateValues['date'] = str(templateValues['date'])[0:16]
@@ -128,6 +130,8 @@ class PinHandler(webapp2.RequestHandler):
         self.pin = db.get(self.key)
         if self.request.get('caption') != "":
             self.pin.caption=self.request.get('caption')
+        if self.request.get('addcomment') != "":
+            self.pin.comments.append(self.request.get('addcomment'))
         self.pin.pinprivate = self.request.get('pinprivate')
         self.pin.save()
        
@@ -259,6 +263,9 @@ class BoardHandler(webapp2.RequestHandler):
             
         if self.request.get('deletepin') != "":
             self.board.tags.remove(str(self.request.get('deletepin')))
+            
+        self.request.xCoor.append(['addpin'])
+        self.request.yCoor.append(['addpin'])
         
         self.board.save()
 
@@ -310,8 +317,9 @@ class CanvasHandler(webapp2.RequestHandler):
         self.board.boardprivate = self.request.get('boardprivate')
         x = self.request.get('x')
         y = self.request.get('y')
-        self.board.xCoor['editPinId'] = int(float(x))
-        self.board.yCoor['editPinId'] = int(y)
+        logging.info("=%s=" % x)
+        self.board.xCoor[int(self.request.get('editPinId'))] = int(x)
+        self.board.yCoor[int(self.request.get('editPinId'))] = int(y)
 
         self.board.save()
 
